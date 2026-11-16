@@ -1,15 +1,4 @@
-// The look plan, in one place. Six values and one accent hue; the lighting makes every
-// shade the game needs, so no other colour appears in the code. The same six names are
-// the CSS custom properties in index.html.
-export const PALETTE = {
-  canvas: '#14161a',
-  surface: '#1e2228',
-  hairline: '#2c323a',
-  ink: '#e9e6df',
-  muted: '#98a0a8',
-  accent: '#f0a830',
-};
+import * as THREE from 'three';
 
-export function shade(name) {
-  return PALETTE[name];
-}
+export const PALETTE={void:'#071016',floor:'#16252a',wall:'#24383b',teal:'#2b8a86',orange:'#e36b3d',gold:'#f3c969',paper:'#e8eee8',muted:'#91a8a5',red:'#d95656',blue:'#57b5c8'};
+export const mat=(color,rough=.8,metal=0)=>new THREE.MeshStandardMaterial({color,roughness:rough,metalness:metal});
