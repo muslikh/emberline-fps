@@ -1,18 +1,6 @@
 [
- {
-  "name": "1-start.png",
-  "query": "?shot=start&seed=1"
- },
- {
-  "name": "2-play.png",
-  "query": "?shot=play&seed=1"
- },
- {
-  "name": "3-buy.png",
-  "query": "?shot=buy&seed=1"
- },
- {
-  "name": "4-roundwin.png",
-  "query": "?shot=roundwin&seed=1"
- }
+  { "name": "1-play.png", "query": "?shot=play&seed=1" },
+  { "name": "2-start.png", "query": "?shot=start&seed=1" },
+  { "name": "3-buy.png", "query": "?shot=buy&seed=1" },
+  { "name": "4-roundwin.png", "query": "?shot=roundwin&seed=1" }
 ]

@@ -3,8 +3,12 @@ export function createWeapon(camera){
  const g=new THREE.Group(),dark=new THREE.MeshStandardMaterial({color:0x263538,metalness:.7,roughness:.3}),warm=new THREE.MeshStandardMaterial({color:0xe36b3d});
  function part(w,h,d,x,y,z,m=dark){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);g.add(o);}
  part(.16,.17,.55,0,0,0);part(.075,.075,.45,0,.025,-.45);part(.09,.23,.12,0,-.16,.06);part(.18,.06,.33,0,.11,-.07,warm);part(.05,.07,.05,0,.16,-.23);part(.12,.13,.22,0,0,.35);part(.14,.13,.24,-.04,-.1,-.24,warm);
- // The cone base meets the barrel tip at z=-.675; its point faces forward.
- const flash=new THREE.Mesh(new THREE.ConeGeometry(.055,.18,8),new THREE.MeshBasicMaterial({color:0xffd77c}));flash.rotation.x=-Math.PI/2;flash.position.set(0,.025,-.765);g.add(flash);flash.visible=false;
+ const steel=new THREE.MeshStandardMaterial({color:0x9bb9c3,metalness:.8,roughness:.25}),glove=new THREE.MeshStandardMaterial({color:0x354955,roughness:.9});
+ part(.09,.055,.42,0,.07,-.38,steel);part(.035,.13,.035,-.055,.19,.12,steel);part(.035,.13,.035,.055,.19,.12,steel);part(.14,.035,.035,0,.25,.12,steel);part(.025,.1,.025,0,.18,-.53,steel);
+ part(.15,.15,.22,-.09,-.12,-.24,glove);part(.12,.18,.12,.04,-.18,.11,glove);part(.15,.07,.16,.02,-.29,.15,warm);
+ for(let z=-.27;z<0;z+=.065)part(.19,.025,.025,0,.145,z,steel);
+ // The cone base meets the barrel tip; its point faces forward.
+ const flash=new THREE.Mesh(new THREE.ConeGeometry(.11,.32,8),new THREE.MeshBasicMaterial({color:0xffd77c}));flash.rotation.x=-Math.PI/2;flash.position.set(0,.025,-.765);g.add(flash);flash.visible=false;
  g.scale.setScalar(.62);g.position.set(.38,-.3,-.65);camera.add(g);
  // Render the view model after clearing world depth, so nearby cover cannot cut it up.
  g.traverse(o=>o.layers.set(1));

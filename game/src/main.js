@@ -13,13 +13,13 @@ import {createAudio} from './audio.js';
 const params=new URLSearchParams(location.search),shot=params.get('shot'),seed=Number(params.get('seed')||1);
 let rng=seed>>>0;const random=()=>{rng=(rng*1664525+1013904223)>>>0;return rng/4294967296;};
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;document.getElementById('game').appendChild(renderer.domElement);
-const scene=new THREE.Scene();scene.background=new THREE.Color(PALETTE.void);scene.fog=new THREE.Fog(PALETTE.void,18,40);
+const scene=new THREE.Scene();scene.background=new THREE.Color(PALETTE.void);scene.fog=new THREE.Fog(PALETTE.void,25,60);renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const camera=new THREE.PerspectiveCamera(72,innerWidth/innerHeight,.05,100);scene.add(camera);
 const world=createWorld(scene),nav=createNav(),player=createPlayer(world.colliders),weapon=createWeapon(camera),input=createInput(renderer.domElement),hud=createHud(),rounds=createRounds(),audio=createAudio(),bots=createBots(scene,nav,world.shootables,random),ray=new THREE.Raycaster();
 let feed='',running=false,manualFrame=false,last=performance.now();
 function aim(){
  if(rounds.state.phase==='menu'){
-  camera.position.set(9,9,16);camera.lookAt(-1,0,-3);
+  camera.position.set(10,8,18);camera.lookAt(0,1,-4);
   return;
  }
  camera.position.set(player.state.position.x,player.state.position.y+player.state.eye,player.state.position.z);camera.rotation.set(player.state.pitch,player.state.yaw,0,'YXZ');
@@ -29,7 +29,15 @@ function endRound(team){rounds.win(team);running=false;input.state.firing=false;
 function buyShop(){if(rounds.state.phase==='buy'&&rounds.buy(2700)){weapon.state.capacity=30;weapon.state.mag=30;weapon.state.reserve=90;feed='<b>SHOP</b> VANTA rifle equipped';}}
 function start(){audio.boot();running=true;manualFrame=false;rounds.start();bots.reset();weapon.reset();player.state.hp=100;player.state.position.set(0,0,8);hud.hide();input.lock();}
 hud.onPlay(()=>{if(rounds.state.phase==='win'){rounds.next();hud.overlay('buy','BUY PHASE','Spend credits before the next push. Press 1 for rifle or 2 for armor.');return;}if(rounds.state.phase==='buy')start();else start();});
-function setupShot(name){if(name==='start'){rounds.state.phase='menu';rounds.state.time=12;hud.overlay('start','EMBERLINE','A round based tactical FPS. Attack the relay, win the economy, own the lanes.');}else if(name==='buy'){rounds.state.phase='buy';rounds.state.time=12;hud.overlay('buy','BUY PHASE // RELAY DISTRICT','Spend credits, then push through the relay lanes.  [1] VANTA RIFLE $2700   [2] ARMOUR $650   [G] GRENADE $300');buyShop();}else{rounds.start();running=true;player.state.position.set(0,0,7);player.state.yaw=0;bots.list.forEach((b,i)=>{b.hp=100;b.alive=true;b.group.visible=true;b.group.position.set([-8,-3,3,8][i],0,[-7,-5,-5,-7][i]);});if(name==='play'){feed='<b>EMBER</b> ready  •  <span>4 RIVALS</span>  •  OBJECTIVE: SECURE RELAY';hud.hide();}if(name==='roundwin'){bots.list.slice(1).forEach(b=>{b.alive=false;b.group.visible=false;});feed='<b>EMBER</b> eliminated RIVAL 2  •  <b>ROUND WIN</b>';rounds.win(0);hud.overlay('win','ROUND WIN','Relay secured. Your squad owns the lane.');}}aim();hud.set({hp:player.state.hp,armor:player.state.armor,mag:weapon.state.mag,reserve:weapon.state.reserve,money:rounds.state.money,time:rounds.state.time,round:rounds.state.round,score:rounds.state.score,feed});renderOnce();}
+function setupShot(name){if(name==='start'){rounds.state.phase='menu';rounds.state.time=12;hud.overlay('start','EMBERLINE','A round based tactical FPS. Attack the relay, win the economy, own the lanes.');}else if(name==='buy'){rounds.state.phase='buy';rounds.state.time=12;hud.overlay('buy','BUY PHASE // RELAY DISTRICT','Spend credits, then push through the relay lanes.  [1] VANTA RIFLE $2700   [2] ARMOUR $650   [G] GRENADE $300');buyShop();}else{rounds.start();running=true;player.state.position.set(0,0,7);player.state.yaw=0;bots.list.forEach((b,i)=>{b.hp=100;b.alive=true;b.group.visible=true;b.group.position.set([-8,-3,3,8][i],0,[-7,-5,-5,-7][i]);});if(name==='play'){
+ player.state.position.set(0,0,6);player.state.pitch=.018;rounds.state.time=74;weapon.state.mag=18;
+ bots.list.forEach((b,i)=>{b.group.position.set([0,1.9,-4.4,6.8][i],0,[-1,-3.2,-5.2,-7][i]);b.group.rotation.y=0;});
+ bots.list[0].hp=32;bots.list[0].health.scale.x=.32;
+ feed='<b>EMBER</b> ▸ <span>RIVAL 4</span> &nbsp; / &nbsp; VANTA';bots.list[3].alive=false;bots.list[3].group.visible=false;hud.hide();document.getElementById('hit').classList.add('on');
+ aim();camera.updateMatrixWorld(true);const muzzle=weapon.flash.getWorldPosition(new THREE.Vector3()),impact=new THREE.Vector3(0,1.73,-.75);
+ const tracer=new THREE.Mesh(new THREE.CylinderGeometry(.012,.012,muzzle.distanceTo(impact),8),new THREE.MeshBasicMaterial({color:0xffdb86}));tracer.position.copy(muzzle).add(impact).multiplyScalar(.5);tracer.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),impact.clone().sub(muzzle).normalize());scene.add(tracer);
+ const sparkMaterial=new THREE.LineBasicMaterial({color:0xffedb4});for(let i=0;i<9;i++){const a=i*2.399;const end=impact.clone().add(new THREE.Vector3(Math.cos(a)*.3,Math.sin(a)*.3,.15));scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([impact,end]),sparkMaterial));}
+}if(name==='roundwin'){bots.list.slice(1).forEach(b=>{b.alive=false;b.group.visible=false;});feed='<b>EMBER</b> eliminated RIVAL 2  •  <b>ROUND WIN</b>';rounds.win(0);hud.overlay('win','ROUND WIN','Relay secured. Your squad owns the lane.');}}aim();hud.set({hp:player.state.hp,armor:player.state.armor,mag:weapon.state.mag,reserve:weapon.state.reserve,money:rounds.state.money,time:rounds.state.time,round:rounds.state.round,score:rounds.state.score,feed});renderOnce();}
 function renderScene(){
  renderer.autoClear=false;
  camera.layers.set(0);renderer.clear();renderer.render(scene,camera);
