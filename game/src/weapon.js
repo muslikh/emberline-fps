@@ -8,10 +8,10 @@ export function createWeapon(camera){
  part(.15,.15,.22,-.09,-.12,-.24,glove);part(.12,.18,.12,.04,-.18,.11,glove);part(.15,.07,.16,.02,-.29,.15,warm);
  for(let z=-.27;z<0;z+=.065)part(.19,.025,.025,0,.145,z,steel);
  // The cone base meets the barrel tip; its point faces forward.
- const flash=new THREE.Mesh(new THREE.ConeGeometry(.11,.32,8),new THREE.MeshBasicMaterial({color:0xffd77c}));flash.rotation.x=-Math.PI/2;flash.position.set(0,.025,-.765);g.add(flash);flash.visible=false;
- g.scale.setScalar(.62);g.position.set(.38,-.3,-.65);camera.add(g);
+ const flash=new THREE.Mesh(new THREE.ConeGeometry(.11,.32,8),new THREE.MeshBasicMaterial({color:0xffd77c}));flash.rotation.x=-Math.PI/2;flash.position.set(0,.025,-.765);g.add(flash);const core=new THREE.Mesh(new THREE.ConeGeometry(.055,.38,8),new THREE.MeshBasicMaterial({color:0xfff8de}));core.position.y=.025;flash.add(core);flash.visible=false;
+ g.scale.setScalar(.82);g.position.set(.47,-.34,-1.05);camera.add(g);
  // Render the view model after clearing world depth, so nearby cover cannot cut it up.
  g.traverse(o=>o.layers.set(1));
  const s={mag:25,reserve:75,cool:0,reload:0,kick:0,spread:0,capacity:25};
- return {state:s,flash,step(dt){s.cool=Math.max(0,s.cool-dt);if(s.reload>0){s.reload=Math.max(0,s.reload-dt);if(!s.reload){const n=Math.min(s.capacity-s.mag,s.reserve);s.mag+=n;s.reserve-=n;}}s.kick=Math.max(0,s.kick-dt*.3);s.spread=Math.max(0,s.spread-dt*.025);g.position.z=-.65+s.kick;g.rotation.x=-s.kick;flash.visible=s.cool>.08;},ready(){return s.cool===0&&s.reload===0&&s.mag>0;},fire(){s.mag--;s.cool=.14;s.kick=.065;s.spread=Math.min(.035,s.spread+.006);flash.visible=true;},reload(){if(s.mag<s.capacity&&s.reserve&&s.reload===0){s.reload=1.7;return true;}return false;},reset(){s.mag=s.capacity;s.reserve=s.capacity*3;s.cool=s.reload=s.spread=0;}};
+ return {state:s,flash,step(dt){s.cool=Math.max(0,s.cool-dt);if(s.reload>0){s.reload=Math.max(0,s.reload-dt);if(!s.reload){const n=Math.min(s.capacity-s.mag,s.reserve);s.mag+=n;s.reserve-=n;}}s.kick=Math.max(0,s.kick-dt*.3);s.spread=Math.max(0,s.spread-dt*.025);g.position.z=-1.05+s.kick;g.rotation.x=-s.kick;flash.visible=s.cool>.08;},ready(){return s.cool===0&&s.reload===0&&s.mag>0;},fire(){s.mag--;s.cool=.14;s.kick=.065;s.spread=Math.min(.035,s.spread+.006);flash.visible=true;},reload(){if(s.mag<s.capacity&&s.reserve&&s.reload===0){s.reload=1.7;return true;}return false;},reset(){s.mag=s.capacity;s.reserve=s.capacity*3;s.cool=s.reload=s.spread=0;}};
 }

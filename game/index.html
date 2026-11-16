@@ -12,4 +12,12 @@
 .panel{background:#09191bf5;border:1px solid #7daba8;box-shadow:0 24px 80px #000b,0 0 0 5px #07101655}
 .panel p{color:#c4d6d1}
 .keys{color:#e1ebe7;text-shadow:0 1px 2px #000}
+/* Combat cues stay legible over both the arena and the view model. */
+.cross{z-index:2;width:38px;height:38px;filter:drop-shadow(0 1px 2px #000)}
+.cross i{background:#d6ffff;box-shadow:0 0 0 1px #071016}
+.cross i:nth-child(1),.cross i:nth-child(2){left:18px;width:2px;height:11px}
+.cross i:nth-child(3),.cross i:nth-child(4){top:18px;height:2px;width:11px}
+#hit{width:14px;height:14px;border-width:2px}
+.feed:not(:empty){padding:10px 14px;background:#071016ed;border-left:3px solid var(--teal);font:bold 14px monospace;letter-spacing:.04em}
+.feed b{color:#e8eee8}.feed em{font-style:normal;color:#a7c4c7;margin:0 10px}.feed span{color:#8ae9ed}
 </style></head><body><div id="game"></div><div id="hud"><div class="top"><span id="round">ROUND 1 · FIRST TO FIVE</span><b id="score">0 — 0</b><span id="timer">TIME 12</span></div><div class="feed" id="feed"></div><div class="cross"><i></i><i></i><i></i><i></i></div><div id="hit"></div><div class="bottom"><div class="health"><b id="hp">100</b> <i>HP</i> <span id="armor">75</span> ARM<br><span id="money">$3,200</span></div><div class="ammo"><span id="mag">25</span><small> / <span id="reserve">75</span><br>VANTA RIFLE</small></div></div></div><div class="overlay" id="overlay"><section class="panel"><div class="eyebrow">SINGLE PLAYER // RELAY DISTRICT</div><h1 id="overlay-title">EMBERLINE</h1><p id="overlay-copy">A round based tactical FPS. Attack the relay, win the economy, own the lanes.</p><button id="play">DEPLOY</button><div class="keys">WASD MOVE &nbsp; MOUSE LOOK &nbsp; LMB FIRE &nbsp; R RELOAD<br>CTRL CROUCH &nbsp; SPACE VAULT &nbsp; FIRST TO FIVE</div></section></div><script type="importmap">{"imports":{"three":"./vendor/three/three.module.min.js"}}</script><script type="module" src="./src/main.js"></script></body></html>

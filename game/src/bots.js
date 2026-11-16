@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 export function createBots(scene,nav,shootables,random){
- const list=[],armor=new THREE.MeshStandardMaterial({color:0xe84058,emissive:0x6e102c,emissiveIntensity:.35,metalness:.35,roughness:.45}),dark=new THREE.MeshStandardMaterial({color:0x162439}),rimMat=new THREE.MeshBasicMaterial({color:0xffb8cc,side:THREE.BackSide}),visor=new THREE.MeshBasicMaterial({color:0x9dffff});
+ const list=[],armor=new THREE.MeshStandardMaterial({color:0xcf5870,emissive:0x702b45,emissiveIntensity:.65,metalness:.35,roughness:.45}),dark=new THREE.MeshStandardMaterial({color:0x344155}),rimMat=new THREE.MeshBasicMaterial({color:0x80f4ff,side:THREE.BackSide}),visor=new THREE.MeshBasicMaterial({color:0x9dffff});
  for(let i=0;i<4;i++){
   const g=new THREE.Group();
-  function part(w,h,d,x,y,z,m=armor,rim=false){const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);mesh.position.set(x,y,z);mesh.castShadow=true;g.add(mesh);if(rim){const edge=new THREE.Mesh(mesh.geometry,rimMat);edge.position.copy(mesh.position);edge.scale.set(1.06,1.04,1.08);g.add(edge);}return mesh;}
+  function part(w,h,d,x,y,z,m=armor,rim=true){const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);mesh.position.set(x,y,z);mesh.castShadow=true;g.add(mesh);if(rim){const edge=new THREE.Mesh(mesh.geometry,rimMat);edge.position.copy(mesh.position);edge.scale.set(1.10,1.065,1.12);g.add(edge);}return mesh;}
   const body=part(.64,.78,.38,0,1.2,0,armor,true),head=part(.4,.4,.38,0,1.85,0,armor,true);
   part(.32,.11,.02,0,1.88,.2,visor);part(.4,.16,.04,0,1.35,.21,dark);
   for(const side of [-1,1]){part(.24,.7,.28,side*.2,.47,0,dark);part(.25,.25,.31,side*.2,.67,.035,armor,true);part(.29,.16,.48,side*.2,.1,.09,dark);part(.25,.35,.34,side*.46,1.43,0,armor,true);part(.19,.4,.25,side*.42,1.1,.17,dark);}
