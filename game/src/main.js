@@ -17,7 +17,13 @@ const scene=new THREE.Scene();scene.background=new THREE.Color(PALETTE.void);sce
 const camera=new THREE.PerspectiveCamera(72,innerWidth/innerHeight,.05,100);scene.add(camera);
 const world=createWorld(scene),nav=createNav(),player=createPlayer(world.colliders),weapon=createWeapon(camera),input=createInput(renderer.domElement),hud=createHud(),rounds=createRounds(),audio=createAudio(),bots=createBots(scene,nav,world.shootables,random),ray=new THREE.Raycaster();
 let feed='',running=false,manualFrame=false,last=performance.now();
-function aim(){camera.position.set(player.state.position.x,player.state.position.y+player.state.eye,player.state.position.z);camera.rotation.set(player.state.pitch,player.state.yaw,0,'YXZ');}
+function aim(){
+ if(rounds.state.phase==='menu'){
+  camera.position.set(9,9,16);camera.lookAt(-1,0,-3);
+  return;
+ }
+ camera.position.set(player.state.position.x,player.state.position.y+player.state.eye,player.state.position.z);camera.rotation.set(player.state.pitch,player.state.yaw,0,'YXZ');
+}
 function shoot(){if(!weapon.ready())return;weapon.fire();audio.shot();camera.getWorldDirection(ray.ray.direction);ray.set(camera.position,ray.ray.direction);const hit=ray.intersectObjects(bots.list.filter(b=>b.alive).flatMap(b=>[b.body,b.head]),false)[0];if(hit){const b=hit.object.userData.bot;b.hp-=hit.object===b.head?100:34;hud.hit();if(b.hp<=0){b.alive=false;b.group.visible=false;feed=`<b>EMBER</b> eliminated <span>RIVAL ${bots.list.indexOf(b)+1}</span>`;audio.round();if(bots.list.every(x=>!x.alive))endRound(0);}}player.recoil();}
 function endRound(team){rounds.win(team);running=false;input.state.firing=false;hud.overlay(rounds.state.phase,'ROUND WIN',team===0?'Relay secured. Your squad owns the lane.':'The opposing squad controls the relay.');}
 function buyShop(){if(rounds.state.phase==='buy'&&rounds.buy(2700)){weapon.state.capacity=30;weapon.state.mag=30;weapon.state.reserve=90;feed='<b>SHOP</b> VANTA rifle equipped';}}
@@ -28,7 +34,7 @@ function renderScene(){
  renderer.autoClear=false;
  camera.layers.set(0);renderer.clear();renderer.render(scene,camera);
  const background=scene.background;scene.background=null;
- renderer.clearDepth();camera.layers.set(1);renderer.render(scene,camera);
+ if(rounds.state.phase!=='menu'){renderer.clearDepth();camera.layers.set(1);renderer.render(scene,camera);}
  camera.layers.set(0);scene.background=background;
 }
 function renderOnce(){aim();if(shot==='play')weapon.flash.visible=true;renderScene();manualFrame=Boolean(shot);window.__shotReady=true;}

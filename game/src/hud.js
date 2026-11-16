@@ -4,11 +4,11 @@ export function createHud(){
     set(data){
       $('hp').textContent=Math.max(0,Math.ceil(data.hp));$('armor').textContent=Math.max(0,Math.ceil(data.armor));
       $('mag').textContent=data.mag;$('reserve').textContent=data.reserve;$('money').textContent='$'+data.money.toLocaleString();
-      $('timer').textContent=Math.ceil(data.time).toString().padStart(2,'0');$('round').textContent=`ROUND ${data.round} / 10`;
+      $('timer').textContent=`TIME ${Math.ceil(data.time).toString().padStart(2,'0')}`;$('round').textContent=`ROUND ${data.round} · FIRST TO FIVE`;
       $('score').textContent=`${data.score[0]} — ${data.score[1]}`;$('feed').innerHTML=data.feed||'';
     },
-    overlay(mode,title,copy){$('overlay-title').textContent=title;$('overlay-copy').textContent=copy;$('play').textContent=mode==='buy'?'START ROUND':mode==='start'?'DEPLOY':'CONTINUE';overlay.hidden=false;},
-    hide(){overlay.hidden=true;},
+    overlay(mode,title,copy){$('overlay-title').textContent=title;$('overlay-copy').textContent=copy;$('play').textContent=mode==='buy'?'START ROUND':mode==='start'?'DEPLOY':'CONTINUE';overlay.hidden=false;$('hud').hidden=mode==='start';overlay.dataset.mode=mode;},
+    hide(){overlay.hidden=true;$('hud').hidden=false;},
     onPlay(fn){$('play').onclick=fn;},
     hit(){const x=$('hit');x.classList.add('on');setTimeout(()=>x.classList.remove('on'),120);},
   };
